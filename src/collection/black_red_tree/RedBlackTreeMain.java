@@ -4,11 +4,12 @@ public class RedBlackTreeMain {
 
     public static void main(String[] args) {
         RedBlackTree<Integer> tree = new RedBlackTree<>();
-        tree.insert(10);
-        tree.insert(5);
-        tree.insert(20);
+        int[] values = {10, 5, 15, 1, 6};
 
-        System.out.println(tree.contains(5));  // true
-        System.out.println(tree.getRoot().getValue());  // 10
+        for (int v : values) {
+            System.out.println("\n[삽입] " + v);
+            tree.insert(v);
+            tree.printTree();
+        }
     }
 }

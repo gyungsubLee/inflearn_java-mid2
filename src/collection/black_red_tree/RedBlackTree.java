@@ -1,5 +1,8 @@
 package collection.black_red_tree;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class RedBlackTree<E extends Comparable<E>> {
@@ -75,9 +78,11 @@ public class RedBlackTree<E extends Comparable<E>> {
     }
 
     private void fixInsert(Node<E> node) {
-        while (node != root && node.parent.color == RED && node.parent.parent != null) {
+        while (node != root && node.parent != null && node.parent.color == RED) {
             Node<E> parent = node.parent;
             Node<E> grandParent = parent.parent;
+
+            if (grandParent == null) break;
 
             if (parent == grandParent.left) {
                 Node<E> uncle = grandParent.right;
@@ -124,6 +129,7 @@ public class RedBlackTree<E extends Comparable<E>> {
     }
 
     private void rotateLeft(Node<E> node) {
+        System.out.println("rotateLeft at node: " + node.value);
         Node<E> rightChild = node.right;
         node.right = rightChild.left;
 
@@ -131,14 +137,15 @@ public class RedBlackTree<E extends Comparable<E>> {
             rightChild.left.parent = node;
         }
 
-        rightChild.parent = node.parent;
+        Node<E> originalParent = node.parent; // 💡 회전 전 부모 저장
+        rightChild.parent = originalParent;
 
-        if (node.parent == null) {
+        if (originalParent == null) {
             root = rightChild;
-        } else if (node == node.parent.left) {
-            node.parent.left = rightChild;
+        } else if (node == originalParent.left) {
+            originalParent.left = rightChild;
         } else {
-            node.parent.right = rightChild;
+            originalParent.right = rightChild;
         }
 
         rightChild.left = node;
@@ -146,6 +153,7 @@ public class RedBlackTree<E extends Comparable<E>> {
     }
 
     private void rotateRight(Node<E> node) {
+        System.out.println("rotateRight at node: " + node.value);
         Node<E> leftChild = node.left;
         node.left = leftChild.right;
 
@@ -153,30 +161,19 @@ public class RedBlackTree<E extends Comparable<E>> {
             leftChild.right.parent = node;
         }
 
-        leftChild.parent = node.parent;
+        Node<E> originalParent = node.parent;
+        leftChild.parent = originalParent;
 
-        if (node.parent == null) {
+        if (originalParent == null) {
             root = leftChild;
-        } else if (node == node.parent.right) {
-            node.parent.right = leftChild;
+        } else if (node == originalParent.right) {
+            originalParent.right = leftChild;
         } else {
-            node.parent.left = leftChild;
+            originalParent.left = leftChild;
         }
 
         leftChild.right = node;
         node.parent = leftChild;
-    }
-
-    public void printTree() {
-        printTree(root, "", true);
-    }
-
-    private void printTree(Node<E> current, String indent, boolean isLast) {
-        if (current != null) {
-            System.out.println(indent + (isLast ? "└── " : "├── ") + current.value + "(" + (current.color == RED ? "RED" : "BLACK") + ")");
-            printTree(current.left, indent + (isLast ? "    " : "│   "), false);
-            printTree(current.right, indent + (isLast ? "    " : "│   "), true);
-        }
     }
 
     public Node<E> getRoot() {
@@ -205,5 +202,24 @@ public class RedBlackTree<E extends Comparable<E>> {
     @Override
     public int hashCode() {
         return Objects.hash(root);
+    }
+
+    public void printTree() {
+        printTree(root, 0, "ROOT");
+    }
+
+    private void printTree(Node<E> node, int depth, String connector) {
+        if (node == null) return;
+
+        // 오른쪽 자식 먼저 출력 (위쪽으로 보이게)
+        printTree(node.right, depth + 1, "/");
+
+        // 현재 노드 출력
+        String indent = "       ".repeat(depth); // depth에 따라 들여쓰기 조절
+        String label = node.value + "(" + (node.color == RED ? "R" : "B") + ")";
+        System.out.println(indent + connector + "── " + label);
+
+        // 왼쪽 자식 출력
+        printTree(node.left, depth + 1, "\\");
     }
 }
