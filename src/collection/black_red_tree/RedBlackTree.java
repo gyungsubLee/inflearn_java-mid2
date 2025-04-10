@@ -9,7 +9,7 @@ public class RedBlackTree<E extends Comparable<E>> {
 
     private Node<E> root;
 
-    private static class Node<E> {
+    public static class Node<E> {
         E value;
         int color;
         Node<E> left, right, parent;
@@ -17,6 +17,26 @@ public class RedBlackTree<E extends Comparable<E>> {
         Node(E value) {
             this.value = value;
             this.color = RED;
+        }
+
+        public E getValue() {
+            return value;
+        }
+
+        public Node<E> getLeft() {
+            return this.left;
+        }
+
+        public Node<E> getRight() {
+            return this.right;
+        }
+
+        public boolean isBlack() {
+            return color == BLACK;
+        }
+
+        public boolean isRed() {
+            return color == RED;
         }
     }
 
@@ -95,6 +115,11 @@ public class RedBlackTree<E extends Comparable<E>> {
                 }
             }
         }
+
+        while (node.parent != null) {
+            node = node.parent;
+        }
+        root = node;
         root.color = BLACK;
     }
 
@@ -154,9 +179,8 @@ public class RedBlackTree<E extends Comparable<E>> {
         }
     }
 
-    // 테스트용 root 노드 값 반환
-    public E getRootValue() {
-        return root != null ? root.value : null;
+    public Node<E> getRoot() {
+        return root;
     }
 
     public boolean contains(E value) {

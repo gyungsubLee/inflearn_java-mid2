@@ -1,4 +1,5 @@
 package collection.black_red_tree;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +29,7 @@ public class RedBlackTreeTest {
         tree.insert(5);
         tree.insert(15);
 
-        assertEquals(10, tree.getRootValue()); // 루트 값 확인
+        assertEquals(10, tree.getRoot().getValue()); // 루트 값 확인
     }
 
     @Test
@@ -80,5 +81,70 @@ public class RedBlackTreeTest {
         public Counter(int count) {
             this.count = count;
         }
+    }
+
+    @DisplayName("LL 회전 (Left-Left 회전) 케이스")
+    @Test
+    public void testLLRotation() {
+        RedBlackTree<Integer> tree = new RedBlackTree<>();
+        tree.insert(30);
+        tree.insert(20);
+        tree.insert(10);
+        RedBlackTree.Node<Integer> root = tree.getRoot();
+        assertEquals(Integer.valueOf(20), root.getValue());          // 회전 후 루트는 20
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue()); // 왼쪽 자식은 10
+        assertEquals(Integer.valueOf(30), root.getRight().getValue()); // 오른쪽 자식은 30
+        assertTrue(root.isBlack());             // 새 루트 20은 검정색
+        assertTrue(root.getLeft().isRed());     // 10은 빨강색
+        assertTrue(root.getRight().isRed());    // 30은 빨강색
+    }
+
+    @DisplayName("LR 회전 (Left-Right 회전) 케이스")
+    @Test
+    public void testLRRotation() {
+        RedBlackTree<Integer> tree = new RedBlackTree<>();
+        tree.insert(30);
+        tree.insert(10);
+        tree.insert(20);
+        RedBlackTree.Node<Integer> root = tree.getRoot();
+        assertEquals(Integer.valueOf(20), root.getValue());           // 회전 후 루트 20
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue());  // 왼쪽 자식 10
+        assertEquals(Integer.valueOf(30), root.getRight().getValue()); // 오른쪽 자식 30
+        assertTrue(root.isBlack());              // 20은 검정색
+        assertTrue(root.getLeft().isRed());      // 10은 빨강색
+        assertTrue(root.getRight().isRed());     // 30은 빨강색
+    }
+
+    @DisplayName("RL 회전 (Right-Left 회전) 케이스")
+    @Test
+    public void testRLRotation() {
+        RedBlackTree<Integer> tree = new RedBlackTree<>();
+        tree.insert(10);
+        tree.insert(30);
+        tree.insert(20);
+        RedBlackTree.Node<Integer> root = tree.getRoot();
+        assertEquals(Integer.valueOf(20), root.getValue());            // 회전 후 루트 20
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue());   // 왼쪽 자식 10
+        assertEquals(Integer.valueOf(30), root.getRight().getValue());  // 오른쪽 자식 30
+        assertTrue(root.isBlack());               // 20은 검정색
+        assertTrue(root.getLeft().isRed());       // 10은 빨강색
+        assertTrue(root.getRight().isRed());      // 30은 빨강색
+    }
+
+
+    @DisplayName("RR 회전 (Right-Right 회전) 케이스")
+    @Test
+    public void testRRRotation() {
+        RedBlackTree<Integer> tree = new RedBlackTree<>();
+        tree.insert(10);
+        tree.insert(20);
+        tree.insert(30);
+        RedBlackTree.Node<Integer> root = tree.getRoot();
+        assertEquals(Integer.valueOf(20), root.getValue());            // 회전 후 루트 20
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue());   // 왼쪽 자식 10
+        assertEquals(Integer.valueOf(30), root.getRight().getValue());  // 오른쪽 자식 30
+        assertTrue(root.isBlack());                // 20은 검정색 (루트는 항상 검정)
+        assertTrue(root.getLeft().isRed());        // 10은 빨강색
+        assertTrue(root.getRight().isRed());       // 30은 빨강색
     }
 }

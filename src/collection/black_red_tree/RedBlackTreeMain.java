@@ -9,6 +9,6 @@ public class RedBlackTreeMain {
         tree.insert(20);
 
         System.out.println(tree.contains(5));  // true
-        System.out.println(tree.getRootValue());  // 10
+        System.out.println(tree.getRoot().getValue());  // 10
     }
 }
